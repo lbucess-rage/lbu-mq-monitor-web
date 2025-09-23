@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//apps/APP/conf/**)",
+      "Bash(chmod:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
