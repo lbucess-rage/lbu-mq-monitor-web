@@ -33,21 +33,27 @@ function initializeSocket() {
         console.log('Connection confirmed:', data);
     });
 
+    // Only listen to mqEvent to avoid duplicates
     socket.on('mqEvent', (event) => {
-        handleNewEvent(event);
-    });
-
-    socket.on('stationEvent', (event) => {
-        if (eventFilter === 'all' || eventFilter === 'station') {
-            addStationEvent(event);
+        if (eventFilter === 'all' ||
+            (eventFilter === 'station' && event.type === 'StationEvent') ||
+            (eventFilter === 'agent' && event.type === 'AgentStatus')) {
+            handleNewEvent(event);
         }
     });
 
-    socket.on('agentStatus', (event) => {
-        if (eventFilter === 'all' || eventFilter === 'agent') {
-            addAgentEvent(event);
-        }
-    });
+    // Comment out individual event listeners to prevent duplicates
+    // socket.on('stationEvent', (event) => {
+    //     if (eventFilter === 'all' || eventFilter === 'station') {
+    //         addStationEvent(event);
+    //     }
+    // });
+
+    // socket.on('agentStatus', (event) => {
+    //     if (eventFilter === 'all' || eventFilter === 'agent') {
+    //         addAgentEvent(event);
+    //     }
+    // });
 
     socket.on('history', (events) => {
         console.log(`Received ${events.length} historical events`);
